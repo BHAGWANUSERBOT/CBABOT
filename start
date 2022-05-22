@@ -1,0 +1,53 @@
+#!/bin/bash
+
+
+_get_repolink () {
+    local regex
+    regex='(https?)://github.com/.+/.+'
+    if [[ $UPSTREAM_REPO == "cbaversiontwo" ]]
+    then
+        echo "aHR0cHM6Ly9naXRodWIuY29tL0JIQUdXQU5VU0VSQk9UL0NCQVVTRVJCT1QvYXJjaGl2ZS9tYWluLnppcA==" | base64 -d
+    elif [[ $UPSTREAM_REPO =~ $regex ]]
+    then
+        if [[ $UPSTREAM_REPO_BRANCH ]]
+        then
+            echo "${UPSTREAM_REPO}/archive/${UPSTREAM_REPO_BRANCH}.zip"
+        else
+            echo "${UPSTREAM_REPO}/archive/main.zip"
+        fi
+    else
+        echo "Something Went Wrong.. Please Get Help From @cba_userbot "
+    fi
+}
+
+
+_set_bot () {
+    local zipfilepath
+    zipfilepath="CBAUSERBOT.zip"
+    wget -q $(_get_repolink) -O "$zipfilepath"
+    CBAUSERBOTPATH=$(zipinfo -1 "$zipfilepath" | grep -v "/.");
+    unzip -qq "$zipfilepath"
+    rm -rf "$zipfilepath"
+    sleep 5
+    cd $CBAUSERBOTPATH
+    python3 ../cbabot/updater.py ../requirements.txt requirements.txt
+    echo "    
+ 
+░█████╗░██████╗░░█████╗░
+██╔══██╗██╔══██╗██╔══██╗
+██║░░╚═╝██████╦╝███████║
+██║░░██╗██╔══██╗██╔══██║
+╚█████╔╝██████╦╝██║░░██║
+░╚════╝░╚═════╝░╚═╝░░╚═╝
+
+██╗░░░██╗░██████╗███████╗██████╗░██████╗░░█████╗░████████╗
+██║░░░██║██╔════╝██╔════╝██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝
+██║░░░██║╚█████╗░█████╗░░██████╔╝██████╦╝██║░░██║░░░██║░░░
+██║░░░██║░╚═══██╗██╔══╝░░██╔══██╗██╔══██╗██║░░██║░░░██║░░░
+╚██████╔╝██████╔╝███████╗██║░░██║██████╦╝╚█████╔╝░░░██║░░░
+░╚═════╝░╚═════╝░╚══════╝╚═╝░░╚═╝╚═════╝░░╚════╝░░░░╚═╝░░░
+    "
+    python3 -m cbauserbot
+}
+
+_set_bot
