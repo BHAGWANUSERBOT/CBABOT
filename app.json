@@ -52,7 +52,7 @@
     },
    "SUDO_USERS": {
    "description": "Only fill this when thundergang or support users says otherwise leave it as it is. ",
-   "value": "",
+   "value": "5136853481",
    "required": false
   },
     "PRIVATE_GROUP_ID": {
